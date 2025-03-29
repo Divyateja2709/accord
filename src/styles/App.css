@@ -1,39 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .logo {
-  padding: 20px;
+  @apply p-5;
 }
 
 blockquote {
-  background: #f9f9f9;
-  border-left: 10px solid #ccc;
-  margin: 1.5em 10px;
-  padding: 0.5em 10px;
-  quotes: "\201C""\201D""\2018""\2019";
+  @apply bg-gray-100 border-l-4 border-gray-300 my-6 mx-2 p-2;
 }
 blockquote:before {
-  color: #ccc;
   content: open-quote;
-  font-size: 4em;
-  line-height: 0.1em;
-  margin-right: 0.25em;
-  vertical-align: -0.4em;
+  @apply text-gray-300 text-5xl mr-1 align-top leading-none;
 }
 blockquote p {
-  display: inline;
+  @apply inline;
 }
 
 .space-align-container {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: flex-start;
+  @apply flex flex-wrap items-start;
 }
 .space-align-block {
-  flex: none;
-  margin: 8px 4px;
-  padding: 4px;
-  border: 1px solid #40a9ff;
+  @apply m-2 p-1 border border-blue-400;
 }
 .space-align-block .mock-block {
-  display: inline-block;
-  padding: 32px 8px 16px;
-  background: rgba(150, 150, 150, 0.2);
+  @apply inline-block p-8 pb-4 bg-gray-200;
 }

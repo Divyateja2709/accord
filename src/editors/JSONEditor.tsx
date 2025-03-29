@@ -38,8 +38,8 @@ export default function JSONEditor({
   );
 
   return (
-    <div className="editorwrapper">
-      <Suspense fallback={<div>Loading Editor...</div>}>
+    <div className="w-full h-[60vh] border-2 border-gray-200 rounded-lg">
+      <Suspense fallback={<div className="text-center text-gray-500">Loading Editor...</div>}>
         <MonacoEditor
           options={options}
           language="json"

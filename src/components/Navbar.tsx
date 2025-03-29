@@ -1,19 +1,16 @@
 import { useState } from "react";
-import { Menu, Dropdown, Button, Image, Grid } from "antd";
 import { useSpring, animated } from "react-spring";
 import { useLocation, Link } from "react-router-dom";
 import {
-  GithubOutlined,
-  QuestionOutlined,
-  UserOutlined,
-  InfoOutlined,
-  BookOutlined,
-  CaretDownFilled,
-  MenuOutlined
-} from "@ant-design/icons";
+  FaGithub,
+  FaQuestionCircle,
+  FaUsers,
+  FaInfoCircle,
+  FaBook,
+  FaCaretDown,
+  FaBars,
+} from "react-icons/fa";
 import ToggleDarkMode from "./ToggleDarkMode";
-
-const { useBreakpoint } = Grid;
 
 interface NavbarProps {
   scrollToFooter: () => void;
@@ -23,7 +20,6 @@ function Navbar({ scrollToFooter }: NavbarProps) {
   const [hovered, setHovered] = useState<
     null | "home" | "explore" | "help" | "github" | "join"
   >(null);
-  const screens = useBreakpoint();
   const location = useLocation();
 
   const props = useSpring({
@@ -36,290 +32,118 @@ function Navbar({ scrollToFooter }: NavbarProps) {
     config: { duration: 1000 },
   });
 
-  const mobileMenu = (
-    <Menu>
-      <Menu.Item key="home">
-        <Link to="/">
-          Template Playground
-        </Link>
-      </Menu.Item>
-      <Menu.Item key="explore" onClick={scrollToFooter}>
-        Explore
-      </Menu.Item>
-      <Menu.Item key="about">
-        <a
-          href="https://github.com/accordproject/template-playground/blob/main/README.md"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <QuestionOutlined /> About
-        </a>
-      </Menu.Item>
-      <Menu.Item key="community">
-        <a
-          href="https://discord.com/invite/Zm99SKhhtA"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <UserOutlined /> Community
-        </a>
-      </Menu.Item>
-      <Menu.Item key="issues">
-        <a
-          href="https://github.com/accordproject/template-playground/issues"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <InfoOutlined /> Issues
-        </a>
-      </Menu.Item>
-      <Menu.Item key="documentation">
-        <a
-          href="https://github.com/accordproject/template-engine/blob/main/README.md"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <BookOutlined /> Documentation
-        </a>
-      </Menu.Item>
-    </Menu>
-  );
-
-  const helpMenu = (
-    <Menu>
-      <Menu.ItemGroup key="info" title="Info">
-        <Menu.Item key="about">
-          <a
-            href="https://github.com/accordproject/template-playground/blob/main/README.md"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <QuestionOutlined /> About
-          </a>
-        </Menu.Item>
-        <Menu.Item key="community">
-          <a
-            href="https://discord.com/invite/Zm99SKhhtA"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <UserOutlined /> Community
-          </a>
-        </Menu.Item>
-        <Menu.Item key="issues">
-          <a
-            href="https://github.com/accordproject/template-playground/issues"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <InfoOutlined /> Issues
-          </a>
-        </Menu.Item>
-      </Menu.ItemGroup>
-      <Menu.ItemGroup title="Documentation">
-        <Menu.Item key="documentation">
-          <a
-            href="https://github.com/accordproject/template-engine/blob/main/README.md"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <BookOutlined /> Documentation
-          </a>
-        </Menu.Item>
-      </Menu.ItemGroup>
-    </Menu>
-  );
-
-  const menuItemStyle = (key: string, isLast: boolean) => ({
-    display: "flex",
-    alignItems: "center",
-    padding: screens.md ? "0 20px" : "0",
-    backgroundColor:
-      hovered === key ? "rgba(255, 255, 255, 0.1)" : "transparent",
-    height: "65px",
-    borderRight:
-      screens.md && !isLast ? "1.5px solid rgba(255, 255, 255, 0.1)" : "none",
-  });
-
   const isLearnPage = location.pathname.startsWith("/learn");
 
   return (
-    <div
-      style={{
-        background: "#1b2540",
-        height: "65px",
-        lineHeight: "65px",
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: screens.lg ? 40 : screens.md ? 10 : 10,
-        paddingRight: screens.lg ? 40 : screens.md ? 10 : 10,
-      }}
-    >
+    <div className="bg-[#1b2540] h-16 flex items-center px-4 md:px-10 lg:px-16 justify-between">
+      {/* Logo and Home Link */}
       <div
-        style={{
-          cursor: "pointer",
-          ...menuItemStyle("home", false),
-        }}
+        className="flex items-center cursor-pointer"
         onMouseEnter={() => setHovered("home")}
         onMouseLeave={() => setHovered(null)}
       >
-        <Link
-          to="/"
-          rel="noopener noreferrer"
-          style={{ display: "flex", alignItems: "center" }}
-        >
-          <Image
-            src={screens.lg ? "/logo.png" : "/accord_logo.png"}
+        <Link to="/" className="flex items-center space-x-2">
+          <img
+            src="/logo.png"
             alt="Template Playground"
-            preview={false}
-            style={{
-              paddingRight: screens.md ? "8px" : "2px",
-              height: "26px",
-              maxWidth: screens.md ? "184.17px" : "36.67px",
-            }}
+            className="h-8 md:h-9"
           />
-          <span style={{ color: "white", display: screens.lg ? "block" : "none" }}>Template Playground</span>
-
+          <span className="hidden lg:block text-white text-lg font-semibold">
+            Template Playground
+          </span>
         </Link>
       </div>
-      {screens.md ? (
-        <>
-          <div
-            style={{
-              ...menuItemStyle("explore", false),
-              cursor: "pointer",
-            }}
-            onClick={scrollToFooter}
-            onMouseEnter={() => setHovered("explore")}
-            onMouseLeave={() => setHovered(null)}
-          >
-            <span style={{ color: "white" }}>Explore</span>
-          </div>
-          <div
-            style={{
-              ...menuItemStyle("help", false),
-              cursor: "pointer",
-            }}
-            onMouseEnter={() => setHovered("help")}
-            onMouseLeave={() => setHovered(null)}
-          >
-            <Dropdown overlay={helpMenu} trigger={["click"]}>
-              <Button
-                style={{
-                  background: "transparent",
-                  border: "none",
-                  color: "white",
-                  height: "65px",
-                  display: "flex",
-                  alignItems: "center",
-                }}
-              >
-                Help
-                <CaretDownFilled
-                  style={{ fontSize: "10px", marginLeft: "5px" }}
-                />
-              </Button>
-            </Dropdown>
-          </div>
-        </>
-      ) : (
-        <div style={{ marginLeft: "5px" }}>
-          <Dropdown overlay={mobileMenu} trigger={["click"]}>
-            <Button
-              style={{
-                background: "transparent",
-                border: "none",
-                color: "white",
-                height: "65px",
-                display: "flex",
-                alignItems: "center",
-              }}
-            >
-              <MenuOutlined style={{ fontSize: "20px" }} />
-            </Button>
-          </Dropdown>
-        </div>
-      )}
-      <div
-        style={{
-          display: "flex",
-          marginLeft: "auto",
-          alignItems: "center",
-          height: "65px",
-          gap: screens.md ? "20px" : "10px",
-          marginRight: screens.md ? 0 : "5px"
-        }}
-      >
-        <div style={{ marginLeft: screens.md ? 0 : "auto" }}>
-          <ToggleDarkMode />
-        </div>
-        {!isLearnPage && (
-          <div
-            style={{
-              height: "65px",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor:
-                hovered === "join" ? "rgba(255, 255, 255, 0.1)" : "transparent",
-              cursor: "pointer",
-            }}
-            onMouseEnter={() => setHovered("join")}
-            onMouseLeave={() => setHovered(null)}
-          >
-            <Link to="/learn/intro" className="learnNow-button">
-              <animated.button
-                style={{
-                  ...props,
-                  padding: "10px 22px",
-                  backgroundColor: "#19c6c7",
-                  color: "#050c40",
-                  border: "none",
-                  borderRadius: "5px",
-                  cursor: "pointer",
-                }}
-              >
-                Learn
-              </animated.button>
-            </Link>
-          </div>
-        )}
+
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center space-x-6 text-white">
         <div
-          style={{
-            height: "65px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: screens.md ? "0 20px" : "0 10px",
-            borderRadius: "5px",
-            borderLeft: screens.md
-              ? "1.5px solid rgba(255, 255, 255, 0.1)"
-              : "none",
-            paddingLeft: screens.md ? 16 : 5,
-            paddingRight: screens.md ? 16 : 5,
-            backgroundColor:
-              hovered === "github" ? "rgba(255, 255, 255, 0.1)" : "transparent",
-            cursor: "pointer",
-          }}
-          onMouseEnter={() => setHovered("github")}
+          className={`cursor-pointer ${
+            hovered === "explore" ? "bg-gray-700 rounded-md" : ""
+          } px-4 py-2`}
+          onClick={scrollToFooter}
+          onMouseEnter={() => setHovered("explore")}
           onMouseLeave={() => setHovered(null)}
         >
-          <a
-            href="https://github.com/accordproject/template-playground"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ display: "flex", alignItems: "center", color: "white" }}
-          >
-            <GithubOutlined
-              style={{
-                fontSize: "20px",
-                color: "white",
-                marginRight: screens.md ? "5px" : "0",
-              }}
-            />
-            <span style={{ display: screens.md ? "inline" : "none" }}>Github</span>
-          </a>
+          Explore
         </div>
+
+        <div
+          className="relative cursor-pointer"
+          onMouseEnter={() => setHovered("help")}
+          onMouseLeave={() => setHovered(null)}
+        >
+          <div className="flex items-center space-x-1 px-4 py-2">
+            <span>Help</span>
+            <FaCaretDown className="text-sm" />
+          </div>
+          {hovered === "help" && (
+            <div className="absolute bg-gray-800 shadow-lg rounded-md mt-2 w-48 z-10">
+              <a
+                href="https://github.com/accordproject/template-playground/blob/main/README.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-white hover:bg-gray-700"
+              >
+                <FaQuestionCircle className="mr-2 inline" /> About
+              </a>
+              <a
+                href="https://discord.com/invite/Zm99SKhhtA"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-white hover:bg-gray-700"
+              >
+                <FaUsers className="mr-2 inline" /> Community
+              </a>
+              <a
+                href="https://github.com/accordproject/template-playground/issues"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-white hover:bg-gray-700"
+              >
+                <FaInfoCircle className="mr-2 inline" /> Issues
+              </a>
+              <a
+                href="https://github.com/accordproject/template-engine/blob/main/README.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-2 text-white hover:bg-gray-700"
+              >
+                <FaBook className="mr-2 inline" /> Documentation
+              </a>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Right side actions */}
+      <div className="flex items-center space-x-4">
+        <ToggleDarkMode />
+        {!isLearnPage && (
+          <Link to="/learn/intro" className="learnNow-button">
+            <animated.button
+              style={props}
+              className="bg-teal-500 text-[#050c40] px-5 py-2 rounded-md hover:bg-teal-400"
+            >
+              Learn
+            </animated.button>
+          </Link>
+        )}
+        <a
+          href="https://github.com/accordproject/template-playground"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center space-x-2 text-white"
+        >
+          <FaGithub className="text-lg" />
+          <span className="hidden md:inline">GitHub</span>
+        </a>
+      </div>
+
+      {/* Mobile Menu */}
+      <div className="md:hidden">
+        <button className="text-white focus:outline-none">
+          <FaBars className="text-2xl" />
+        </button>
       </div>
     </div>
   );

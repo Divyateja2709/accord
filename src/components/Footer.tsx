@@ -1,156 +1,146 @@
-import React, { useState } from "react";
-import { Layout, Row, Col, Typography, Space, Button, Image, Grid } from "antd";
-import {
-  GithubOutlined,
-  XOutlined,
-  DiscordFilled,
-  LinkedinFilled,
-  DownOutlined,
-  UpOutlined,
-} from "@ant-design/icons";
+import { useState, useEffect } from "react";
 import FOOTER_SECTION from "../constants/content/footer.json";
 import { FooterSection, FooterLink } from "../types/components/Footer.types";
-
-const { Footer } = Layout;
-const { Text, Link } = Typography;
-const { useBreakpoint } = Grid;
+import { MdKeyboardArrowDown, MdKeyboardArrowUp } from "react-icons/md";
+import { FaGithub, FaXTwitter, FaDiscord, FaLinkedin } from "react-icons/fa6";
 
 const CustomFooter: React.FC = () => {
   const year = new Date().getFullYear();
-  const screens = useBreakpoint();
   const [expanded, setExpanded] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  // Handle window resize to manage mobile view
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   return (
-    <Footer
+    <footer
       id="footer"
-      style={{
-        background: "#1b2540",
-        color: "white",
-        padding: "50px 50px 20px 50px",
-      }}
+      className="bg-darkBlue text-white px-8 pt-12 pb-5 space-y-8"
     >
-      <Row justify="space-between" align="middle" gutter={[16, 16]}>
-        <Col xs={24} md={12}>
-          <Space direction="vertical" size="middle">
-            <Link href="https://www.accordproject.org" target="_blank">
-              <Image
-                src="/logo.png"
-                alt="Template Playground"
-                preview={false}
-                style={{ height: "36px", maxWidth: "100%" }}
-              />
-            </Link>
-            <Text style={{ color: "rgba(255, 255, 255, 0.65)" }}>
-              The open-source smart legal contract stack
-            </Text>
-            <Link href="mailto:admin@accordproject.org">
-              <Text strong style={{ color: "rgba(255, 255, 255, 0.65)" }}>
-                admin@accordproject.org
-              </Text>
-            </Link>
-            <Link href="https://discord.com/invite/Zm99SKhhtA" target="_blank">
-              <Button
-                size="large"
-                style={{
-                  padding: "5px 30px",
-                  backgroundColor: "#19c6c7",
-                  borderRadius: "5px",
-                  color: "#050c40",
-                  textAlign: "center",
-                  border: "none",
-                }}
-              >
-                Join
-              </Button>
-            </Link>
-          </Space>
-        </Col>
+      <div className="flex flex-wrap justify-between items-start gap-8">
+        {/* Left Section: Logo, Description, and Join Button */}
+        <div className="space-y-4">
+          <a href="https://www.accordproject.org" target="_blank">
+            <img
+              src="/logo.png"
+              alt="Template Playground"
+              className="h-9 w-auto"
+            />
+          </a>
+          <p className="text-gray-400 text-sm">
+            The open-source smart legal contract stack
+          </p>
+          <a
+            href="mailto:admin@accordproject.org"
+            className="text-teal-400 font-semibold text-sm"
+          >
+            admin@accordproject.org
+          </a>
+          <a
+            href="https://discord.com/invite/Zm99SKhhtA"
+            target="_blank"
+            className="bg-teal-400 text-darkBlue px-6 py-2 rounded hover:bg-teal-300 transition"
+          >
+            Join
+          </a>
+        </div>
 
-        <Col xs={24} md={12}>
-          {!screens.md && (
-            <Button
-              type="text"
+        {/* Link Sections */}
+        <div className="w-full md:w-auto">
+          {isMobile ? (
+            <button
               onClick={() => setExpanded(!expanded)}
-              style={{ color: "white", fontSize: "16px", marginBottom: "10px" }}
+              className="text-white text-lg mb-2 md:hidden flex items-center gap-1 focus:outline-none focus:ring focus:ring-teal-400"
+              aria-expanded={expanded}
             >
-              {expanded ? <UpOutlined /> : <DownOutlined />} Other Links
-            </Button>
-          )}
+              {expanded ? <MdKeyboardArrowUp /> : <MdKeyboardArrowDown />}{" "}
+              Other Links
+            </button>
+          ) : null}
 
-          {(screens.md || expanded) && (
-            <Row justify="end" gutter={[16, 16]}>
-              {FOOTER_SECTION.sections.map((section: FooterSection) => (
-                <Col xs={24} sm={12} md={6} key={section.title}>
-                  <Space direction="vertical" size="middle">
-                    <Text
-                      strong
-                      style={{
-                        color: "rgba(255, 255, 255, 0.65)",
-                        fontSize: "11px",
-                        letterSpacing: "0.1em",
-                      }}
-                    >
-                      {section.title}
-                    </Text>
-                    {section.links.map((link: FooterLink) => (
-                      <Link
-                        href={link.href}
-                        key={link.title}
-                        style={{ color: "white", fontSize: "15px" }}
-                      >
-                        {link.title}
-                      </Link>
-                    ))}
-                  </Space>
-                </Col>
-              ))}
-            </Row>
-          )}
-        </Col>
-      </Row>
+          <div
+            className={`${
+              expanded || !isMobile ? "block" : "hidden"
+            } grid grid-cols-2 md:grid-cols-4 gap-4`}
+          >
+            {FOOTER_SECTION.sections.map((section: FooterSection) => (
+              <div key={section.title} className="space-y-2">
+                <h4 className="text-xs uppercase text-gray-400">
+                  {section.title}
+                </h4>
+                {section.links.map((link: FooterLink) => (
+                  <a
+                    key={link.title}
+                    href={link.href}
+                    className="text-white text-sm hover:text-teal-400 focus:outline-none focus:ring focus:ring-teal-400"
+                  >
+                    {link.title}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
-      <Row justify="space-between" align="middle" style={{ marginTop: "40px" }}>
-        <Col>
-          <Text style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-            copyright © {year} accord project &bull;{" "}
-            <Link
-              strong
-              href="https://accordproject.org/privacy"
+      {/* Footer Bottom Section */}
+      <div className="flex flex-col md:flex-row justify-between items-center mt-8 border-t border-gray-600 pt-4 text-sm space-y-4 md:space-y-0">
+        <p className="text-gray-400 text-center md:text-left">
+          © {year} Accord Project ·{" "}
+          <a
+            href="https://accordproject.org/privacy"
+            target="_blank"
+            className="text-teal-400 hover:underline focus:outline-none focus:ring focus:ring-teal-400"
+          >
+            Trademark Policy
+          </a>{" "}
+          ·{" "}
+          <a
+            href="https://accordproject.org/brand-assets"
+            target="_blank"
+            className="text-teal-400 hover:underline focus:outline-none focus:ring focus:ring-teal-400"
+          >
+            Brand Assets
+          </a>
+        </p>
+
+        {/* Social Links */}
+        <div className="flex space-x-4 text-white">
+          {[
+            {
+              href: "https://github.com/accordproject",
+              icon: <FaGithub />,
+            },
+            {
+              href: "https://twitter.com/AccordHQ",
+              icon: <FaXTwitter />,
+            },
+            {
+              href: "https://discord.com/invite/Zm99SKhhtA",
+              icon: <FaDiscord />,
+            },
+            {
+              href: "https://www.linkedin.com/company/accordproject/",
+              icon: <FaLinkedin />,
+            },
+          ].map((social, index) => (
+            <a
+              key={index}
+              href={social.href}
               target="_blank"
-              style={{ color: "rgba(255, 255, 255, 0.85)" }}
+              className="text-xl hover:text-teal-400 focus:outline-none focus:ring focus:ring-teal-400"
+              rel="noopener noreferrer"
             >
-              trademark policy
-            </Link>{" "}
-            &bull;{" "}
-            <Link
-              strong
-              href="https://accordproject.org/brand-assets"
-              target="_blank"
-              style={{ color: "rgba(255, 255, 255, 0.85)" }}
-            >
-              brand assets
-            </Link>
-          </Text>
-        </Col>
-
-        <Col>
-          <Space>
-            <Link href="https://github.com/accordproject" target="_blank" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-              <GithubOutlined style={{ fontSize: "17px" }} />
-            </Link>
-            <Link href="https://twitter.com/AccordHQ" target="_blank" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-              <XOutlined style={{ fontSize: "17px" }} />
-            </Link>
-            <Link href="https://discord.com/invite/Zm99SKhhtA" target="_blank" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-              <DiscordFilled style={{ fontSize: "17px" }} />
-            </Link>
-            <Link href="https://www.linkedin.com/company/accordproject/" target="_blank" style={{ color: "rgba(255, 255, 255, 0.85)" }}>
-              <LinkedinFilled style={{ fontSize: "17px" }} />
-            </Link>
-          </Space>
-        </Col>
-      </Row>
-    </Footer>
+              {social.icon}
+            </a>
+          ))}
+        </div>
+      </div>
+    </footer>
   );
 };
 

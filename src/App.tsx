@@ -1,10 +1,7 @@
 import { useEffect, useState } from "react";
-import { App as AntdApp, Layout, Row, Col, Collapse, Spin } from "antd";
-import { LoadingOutlined } from "@ant-design/icons";
 import { Routes, Route, useSearchParams, useNavigate } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import tour from "./components/Tour";
 import AgreementData from "./editors/editorsContainer/AgreementData";
 import LearnNow from "./pages/LearnNow";
 import AgreementHtml from "./AgreementHtml";
@@ -17,28 +14,14 @@ import UseShare from "./components/UseShare";
 import LearnContent from "./components/Content";
 import FloatingFAB from "./components/FabButton";
 
-const { Content } = Layout;
-
 const App = () => {
   const navigate = useNavigate();
   const init = useAppStore((state) => state.init);
   const loadFromLink = useAppStore((state) => state.loadFromLink);
   const backgroundColor = useAppStore((state) => state.backgroundColor);
   const textColor = useAppStore((state) => state.textColor);
-  const [activePanel, setActivePanel] = useState<string | string[]>();
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(true);
   const [searchParams] = useSearchParams();
-
-  const scrollToFooter = () => {
-    const exploreContent = document.getElementById("footer");
-    if (exploreContent) {
-      exploreContent.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
-  const onChange = (key: string | string[]) => {
-    setActivePanel(key);
-  };
 
   useEffect(() => {
     const initializeApp = async () => {
@@ -65,13 +48,13 @@ const App = () => {
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      .ant-collapse-header {
+      .collapse-header {
         color: ${textColor} !important;
       }
-      .ant-collapse-content {
+      .collapse-content {
         background-color: ${backgroundColor} !important;
       }
-      .ant-collapse-content-active {
+      .collapse-content-active {
         background-color: ${backgroundColor} !important;
       }
     `;
@@ -82,139 +65,70 @@ const App = () => {
     };
   }, [backgroundColor, textColor]);
 
-  useEffect(() => {
-    const startTour = async () => {
-      try {
-        await tour.start();
-        localStorage.setItem("hasVisited", "true");
-      } catch (error) {
-        console.error("Tour failed to start:", error);
-      }
-    };
-
-    const showTour = searchParams.get("showTour") === "true";
-    if (showTour || !localStorage.getItem("hasVisited")) {
-      startTour();
+  const scrollToFooter = () => {
+    const exploreContent = document.getElementById("footer");
+    if (exploreContent) {
+      exploreContent.scrollIntoView({ behavior: "smooth" });
     }
-  }, [searchParams]);
-
-  const panels = [
-    {
-      key: "templateMark",
-      label: "TemplateMark",
-      children: <TemplateMarkdown />,
-    },
-    {
-      key: "model",
-      label: "Concerto Model",
-      children: <TemplateModel />,
-    },
-    {
-      key: "data",
-      label: "Preview Data",
-      children: <AgreementData />,
-    },
-  ];
+  };
 
   return (
-    <AntdApp>
-      <Layout style={{ minHeight: "100vh" }}>
-        <Navbar scrollToFooter={scrollToFooter} />
-        <Content>
-          {loading ? (
-            <div
-              style={{
-                flex: 1,
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                minHeight: "calc(100vh - 64px - 70px)", // Adjust for Navbar and Footer height
-              }}
-            >
-              <Spinner />
-            </div>
-          ) : (
-            <Routes>
-              <Route
-                path="/"
-                element={
-                  <div
-                    style={{
-                      padding: 24,
-                      paddingBottom: 24,
-                      minHeight: 360,
-                      background: backgroundColor,
-                    }}
-                  >
-                    <Row>
-                      <Col xs={24} sm={8}>
-                        <Row
-                          style={{
-                            marginLeft: "25px",
-                            display: "flex",
-                            flexDirection: "row",
-                            gap: "10px",
-                          }}
-                        >
-                          <SampleDropdown setLoading={setLoading} />
-                          <UseShare />
-                        </Row>
-                      </Col>
-                      <Col span={18}>
-                        <Errors />
-                      </Col>
-                    </Row>
-                    <div
-                      style={{
-                        padding: 24,
-                        minHeight: 360,
-                        background: backgroundColor,
-                      }}
-                    >
-                      <Row gutter={24}>
-                        <Col xs={24} sm={16} style={{ paddingBottom: "20px" }}>
-                          <Collapse
-                            defaultActiveKey={activePanel}
-                            onChange={onChange}
-                            items={panels}
-                          />
-                        </Col>
-                        <Col xs={24} sm={8}>
-                          <AgreementHtml loading={loading} isModal={false} />
-                        </Col>
-                      </Row>
+    <div className="flex flex-col min-h-screen">
+      <Navbar scrollToFooter={scrollToFooter} />
+      <main className="flex-1">
+        {loading ? (
+          <Spinner />
+        ) : (
+          <Routes>
+            {/* Main Page Route */}
+            <Route
+              path="/"
+              element={
+                <div
+                  className="p-6 min-h-[calc(100vh-64px-70px)]"
+                  style={{ background: backgroundColor }}
+                >
+                  <div className="flex flex-col sm:flex-row gap-4">
+                    <div className="flex flex-col sm:w-1/3">
+                      <div className="ml-6 flex flex-row gap-2">
+                        <SampleDropdown setLoading={setLoading} />
+                        <UseShare />
+                      </div>
+                      <Errors />
                     </div>
-                    <FloatingFAB />
+                    <div className="flex-1">
+                      <div className="p-6 bg-white shadow-md rounded-lg">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <TemplateMarkdown />
+                          <TemplateModel />
+                          <AgreementData />
+                        </div>
+                      </div>
+                      <AgreementHtml loading={loading} isModal={false} />
+                    </div>
                   </div>
-                }
-              />
-              <Route path="/learn" element={<LearnNow />}>
-                <Route path="intro" element={<LearnContent file="intro.md" />} />
-                <Route path="module1" element={<LearnContent file="module1.md" />} />
-                <Route path="module2" element={<LearnContent file="module2.md" />} />
-                <Route path="module3" element={<LearnContent file="module3.md" />} />
-              </Route>
-            </Routes>
-          )}
-        </Content>
-        <Footer />
-      </Layout>
-    </AntdApp>
+                  <FloatingFAB />
+                </div>
+              }
+            />
+            {/* Learn Section Routes */}
+            <Route path="/learn" element={<LearnNow />}>
+              <Route path="intro" element={<LearnContent file="intro.md" />} />
+              <Route path="module1" element={<LearnContent file="module1.md" />} />
+              <Route path="module2" element={<LearnContent file="module2.md" />} />
+              <Route path="module3" element={<LearnContent file="module3.md" />} />
+            </Route>
+          </Routes>
+        )}
+      </main>
+      <Footer />
+    </div>
   );
 };
 
 const Spinner = () => (
-  <div
-    style={{
-      flex: 1,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-    }}
-  >
-    <Spin
-      indicator={<LoadingOutlined style={{ fontSize: 42, color: "#19c6c7" }} spin />}
-    />
+  <div className="flex justify-center items-center h-full">
+    <div className="animate-spin w-10 h-10 border-4 border-t-teal-500 rounded-full"></div>
   </div>
 );
 

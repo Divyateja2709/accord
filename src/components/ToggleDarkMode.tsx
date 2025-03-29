@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import { ToggleDarkModeContainer } from "../styles/components/ToggleDarkMode";
 import DarkModeToggle from "react-dark-mode-toggle";
 import useAppStore from "../store/store";
 
@@ -19,14 +18,14 @@ const ToggleDarkMode: React.FC = () => {
   };
 
   return (
-    <ToggleDarkModeContainer>
+    <div className="flex justify-center items-center">
       <DarkModeToggle
         className="dark-mode-toggle"
         onChange={handleChange}
         checked={isDarkMode}
         size={60}
       />
-    </ToggleDarkModeContainer>
+    </div>
   );
 };
 

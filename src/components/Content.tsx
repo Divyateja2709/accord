@@ -3,17 +3,6 @@ import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 import rehypeHighlight from "rehype-highlight";
 import { useNavigate } from "react-router-dom";
-import {
-  ContentContainer,
-  NavigationButtons,
-  NavigationButton,
-} from "../styles/components/Content";
-import {
-  LoadingOutlined,
-  LeftOutlined,
-  RightOutlined,
-} from "@ant-design/icons";
-import { Spin } from "antd";
 import fetchContent from "../utils/fetchContent";
 import { steps } from "../constants/learningSteps/steps";
 import { LearnContentProps } from "../types/components/Content.types";
@@ -61,36 +50,50 @@ const LearnContent: React.FC<LearnContentProps> = ({ file }) => {
 
   if (loading) {
     return (
-      <div
-        style={{
-          flex: 1,
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Spin
-          indicator={
-            <LoadingOutlined style={{ fontSize: 42, color: "#19c6c7" }} spin />
-          }
-        />
+      <div className="flex justify-center items-center flex-1 min-h-screen">
+        <div className="animate-spin text-4xl text-teal-500">
+          <svg
+            className="w-12 h-12 text-teal-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8v8H4z"
+            ></path>
+          </svg>
+        </div>
       </div>
     );
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return <div className="text-red-500 text-center">{error}</div>;
   }
 
   return (
-    <ContentContainer>
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow">
       {content && (
         <ReactMarkdown
           rehypePlugins={[rehypeRaw, rehypeHighlight]}
           components={{
             img: ({ ...props }) => (
-              <div className="image-container">
-                <img {...props} alt={props.alt || ""} />
+              <div className="flex justify-center my-4">
+                <img
+                  {...props}
+                  alt={props.alt || ""}
+                  className="max-w-full h-auto rounded"
+                />
               </div>
             ),
           }}
@@ -98,21 +101,29 @@ const LearnContent: React.FC<LearnContentProps> = ({ file }) => {
           {content}
         </ReactMarkdown>
       )}
-      <NavigationButtons>
-        <NavigationButton
+      <div className="flex justify-between mt-4">
+        <button
           onClick={handlePrevious}
           disabled={currentIndex === 0}
+          className={`px-4 py-2 bg-gray-300 text-gray-700 rounded disabled:opacity-50 ${
+            currentIndex === 0 ? "cursor-not-allowed" : "hover:bg-gray-400"
+          }`}
         >
-          <LeftOutlined /> Previous
-        </NavigationButton>
-        <NavigationButton
+          ← Previous
+        </button>
+        <button
           onClick={handleNext}
           disabled={currentIndex === steps.length - 1}
+          className={`px-4 py-2 bg-teal-500 text-white rounded ${
+            currentIndex === steps.length - 1
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:bg-teal-600"
+          }`}
         >
-          Next <RightOutlined />
-        </NavigationButton>
-      </NavigationButtons>
-    </ContentContainer>
+          Next →
+        </button>
+      </div>
+    </div>
   );
 };
 

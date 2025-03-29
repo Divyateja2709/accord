@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
-import { Modal } from "antd";
+import { useState, useEffect } from "react";
 import AgreementHtml from "../AgreementHtml";
-import { FullscreenOutlined } from "@ant-design/icons";
 import useAppStore from "../store/store";
+import { FaExpand } from "react-icons/fa";
 
 const FullScreenModal: React.FC = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -12,17 +11,17 @@ const FullScreenModal: React.FC = () => {
   useEffect(() => {
     const style = document.createElement("style");
     style.innerHTML = `
-      .ant-modal-content {
+      .custom-modal-content {
         background-color: ${backgroundColor} !important;
         color: ${textColor} !important;
       }
-      .ant-modal-header {
+      .custom-modal-header {
         background-color: ${backgroundColor} !important;
         color: ${textColor} !important;
       }
-      .ant-modal-title{
+      .custom-modal-title {
         color: ${textColor} !important;
-        }
+      }
     `;
     document.head.appendChild(style);
     return () => {
@@ -31,21 +30,40 @@ const FullScreenModal: React.FC = () => {
   }, [textColor, backgroundColor]);
 
   return (
-    <div style={{ textAlign: "right", display: "flex", alignItems: "center", justifyContent: "flex-end", color: textColor, }} className="preview-element">
-      <FullscreenOutlined
-        style={{ fontSize: "24px", cursor: "pointer", margin: "5px" }}
+    <div className="flex items-center justify-end text-right text-sm text-gray-700 preview-element">
+      <FaExpand
+        className="text-2xl cursor-pointer m-1 hover:text-teal-400 transition-transform transform hover:scale-110"
         onClick={() => setOpen(true)}
       />
-      <Modal
-        title="Output"
-        centered
-        open={open}
-        onOk={() => setOpen(false)}
-        onCancel={() => setOpen(false)}
-        width={1000}
-      >
-        <AgreementHtml loading={false} isModal={true} />
-      </Modal>
+      {open && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div
+            className="w-11/12 md:w-3/4 lg:w-2/3 xl:w-1/2 p-6 rounded-lg shadow-lg"
+            style={{ backgroundColor, color: textColor }}
+          >
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-xl font-semibold">Output</h2>
+              <button
+                onClick={() => setOpen(false)}
+                className="text-gray-400 hover:text-red-500 text-2xl"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="overflow-y-auto max-h-[70vh]">
+              <AgreementHtml loading={false} isModal={true} />
+            </div>
+            <div className="flex justify-end mt-4">
+              <button
+                onClick={() => setOpen(false)}
+                className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

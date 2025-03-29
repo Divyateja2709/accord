@@ -8,33 +8,59 @@ function TemplateMarkdown() {
   const backgroundColor = useAppStore((state) => state.backgroundColor);
   const editorValue = useAppStore((state) => state.editorValue);
   const setEditorValue = useAppStore((state) => state.setEditorValue);
-  const setTemplateMarkdown = useAppStore((state) => state.setTemplateMarkdown);
+
   const { value, setValue, undo, redo } = useUndoRedo(
     editorValue,
-    setEditorValue,
-    setTemplateMarkdown // Sync to main state and rebuild
+    setEditorValue
   );
 
   const handleChange = (value: string | undefined) => {
     if (value !== undefined) {
       setValue(value); // Update editor state and sync
-      setTemplateMarkdown(value); 
     }
   };
 
   return (
-    <div className="column" style={{ backgroundColor }}>
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <h3 style={{ color: textColor }}>TemplateMark</h3>
-        <div>
-          <FaUndo onClick={undo} title="Undo" style={{ cursor: "pointer", color: textColor, marginRight: "8px" }} />
-          <FaRedo onClick={redo} title="Redo" style={{ cursor: "pointer", color: textColor }} />
+    <div
+      className="flex flex-col gap-4 p-4 rounded-xl shadow-md"
+      style={{ backgroundColor }}
+    >
+      {/* Header section */}
+      <div className="flex items-center justify-between">
+        <h3
+          className="text-lg font-semibold"
+          style={{ color: textColor || "#000" }}
+        >
+          TemplateMark
+        </h3>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={undo}
+            title="Undo"
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          >
+            <FaUndo className="text-base" style={{ color: textColor }} />
+          </button>
+          <button
+            onClick={redo}
+            title="Redo"
+            className="p-2 rounded-lg bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 transition"
+          >
+            <FaRedo className="text-base" style={{ color: textColor }} />
+          </button>
         </div>
       </div>
-      <p style={{ color: textColor }}>
-        A natural language template with embedded variables, conditional sections, and TypeScript code.
+
+      {/* Description */}
+      <p className="text-sm" style={{ color: textColor || "#333" }}>
+        A natural language template with embedded variables, conditional
+        sections, and TypeScript code.
       </p>
-      <MarkdownEditor value={value} onChange={handleChange} />
+
+      {/* Markdown Editor */}
+      <div className="border rounded-lg shadow-md overflow-hidden">
+        <MarkdownEditor value={value} onChange={handleChange} />
+      </div>
     </div>
   );
 }

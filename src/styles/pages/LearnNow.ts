@@ -6,9 +6,9 @@ export const LearnNowContainer = styled.div`
 
 export const SidebarContainer = styled.div`
   width: 250px;
-  background-color: var(--bg-color) !important; 
+  background-color: var(--bg-color);
   padding: 0;
-  border-right: 1px solid var(--border-color) !important;
+  border-right: 1px solid var(--border-color);
 
   h2 {
     margin-top: 0;
@@ -25,13 +25,16 @@ export const SidebarContainer = styled.div`
 
   a {
     text-decoration: none;
-    color: var(--text-color) !important; 
+    color: var(--text-color);
+    &:hover {
+      color: var(--highlight-color);
+    }
   }
 `;
 
 export const ContentContainer = styled.div`
   flex: 1;
   padding: 20px;
-  background-color: var(--bg-color) !important; 
-  color: var(--text-color) !important;
+  background-color: var(--bg-color);
+  color: var(--text-color);
 `;

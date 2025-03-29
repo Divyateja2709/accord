@@ -6,22 +6,23 @@ const MonacoEditor = lazy(() =>
   import("@monaco-editor/react").then((mod) => ({ default: mod.Editor }))
 );
 
-export default function MarkdownEditor({
-  value,
-  onChange,
-}: {
+interface MarkdownEditorProps {
   value: string;
   onChange?: (value: string | undefined) => void;
-}) {
+}
+
+const MarkdownEditor: React.FC<MarkdownEditorProps> = ({ value, onChange }) => {
   const backgroundColor = useAppStore((state) => state.backgroundColor);
   const textColor = useAppStore((state) => state.textColor);
   const monaco = useMonaco();
 
+  // Set theme based on backgroundColor
   const themeName = useMemo(
-    () => (backgroundColor ? "darkTheme" : "lightTheme"),
+    () => (backgroundColor === "#FFFFFF" ? "lightTheme" : "darkTheme"),
     [backgroundColor]
   );
 
+  // Define and apply themes in Monaco
   useEffect(() => {
     if (monaco) {
       const defineTheme = (name: string, base: "vs" | "vs-dark") => {
@@ -30,8 +31,8 @@ export default function MarkdownEditor({
           inherit: true,
           rules: [],
           colors: {
-            "editor.background": backgroundColor,
-            "editor.foreground": textColor,
+            "editor.background": backgroundColor || "#1E1E1E",
+            "editor.foreground": textColor || "#D4D4D4",
             "editor.lineHighlightBorder": "#EDE8DC",
           },
         });
@@ -44,6 +45,7 @@ export default function MarkdownEditor({
     }
   }, [monaco, backgroundColor, textColor, themeName]);
 
+  // Editor options
   const editorOptions = {
     minimap: { enabled: false },
     wordWrap: "on" as const,
@@ -51,6 +53,7 @@ export default function MarkdownEditor({
     scrollBeyondLastLine: false,
   };
 
+  // Handle changes in editor content
   const handleChange = useCallback(
     (val: string | undefined) => {
       if (onChange) onChange(val);
@@ -59,8 +62,10 @@ export default function MarkdownEditor({
   );
 
   return (
-    <div className="editorwrapper">
-      <Suspense fallback={<div>Loading Editor...</div>}>
+    <div className="w-full h-[60vh] border-2 border-gray-200 rounded-lg">
+      <Suspense
+        fallback={<div className="text-center text-gray-500">Loading Editor...</div>}
+      >
         <MonacoEditor
           options={editorOptions}
           language="markdown"
@@ -72,4 +77,6 @@ export default function MarkdownEditor({
       </Suspense>
     </div>
   );
-}
+};
+
+export default MarkdownEditor;

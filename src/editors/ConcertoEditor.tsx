@@ -52,8 +52,8 @@ const handleEditorWillMount = (monacoInstance: typeof monaco) => {
     keywords: concertoKeywords,
     typeKeywords: concertoTypes,
     operators: ["=", "{", "}", "@", '"'],
-    symbols: /[=}{@"]+/,
-    escapes: /\\(?:[btnfru"'\\]|\\u[0-9A-Fa-f]{4})/,
+    symbols: /[=}{@"]+/, 
+    escapes: /\\(?:[btnfru"'\\]|\\u[0-9A-Fa-f]{4})/, 
     tokenizer: {
       root: [
         { include: "@whitespace" },
@@ -67,12 +67,12 @@ const handleEditorWillMount = (monacoInstance: typeof monaco) => {
             },
           },
         ],
-        [/"([^"\\]|\\.)*$/, "string.invalid"], // non-terminated string
+        [/"([^"\\]|\\.)*$/, "string.invalid"],
         [/"/, "string", "@string"],
       ],
       string: [
         [/[^\\"]+/, "string"],
-        [/@escapes/, "string.escape"],
+        [/[@escapes]/, "string.escape"],
         [/\\./, "string.escape.invalid"],
         [/"/, "string", "@pop"],
       ],
@@ -162,8 +162,8 @@ export default function ConcertoEditor({
   }, [ctoErr, monacoInstance]);
 
   return (
-    <div className="editorwrapper">
-      <Suspense fallback={<div>Loading Editor...</div>}>
+    <div className="w-full h-[60vh] border-2 border-gray-200 rounded-lg">
+      <Suspense fallback={<div className="text-center">Loading Editor...</div>}>
         <MonacoEditor
           options={options}
           language="concerto"
@@ -172,6 +172,7 @@ export default function ConcertoEditor({
           onChange={handleChange}
           beforeMount={handleEditorWillMount}
           theme={themeName}
+          className="w-full h-full"
         />
       </Suspense>
     </div>

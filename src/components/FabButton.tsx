@@ -1,8 +1,6 @@
-import { Fab, Action } from "react-tiny-fab";
 import { MdExplore } from "react-icons/md";
 import { FaCircleQuestion } from "react-icons/fa6";
 import tour from "../components/Tour";
-import FabGlobalStyle from "../styles/components/FabGlobalStyles";
 
 const FloatingFAB = () => {
   const startTourEvent = () => {
@@ -10,58 +8,23 @@ const FloatingFAB = () => {
   };
 
   return (
-    <>
-      <FabGlobalStyle />
-      <Fab
-        icon={<FaCircleQuestion />}
-        alwaysShowTitle
-        mainButtonStyles={{
-          backgroundColor: "#1B2540",
-          color: "white",
-          width: "50px",
-          height: "50px",
-          boxShadow: "0px 6px 10px rgba(0, 0, 0, 0.25)",
-          borderRadius: "50%",
-          transition: "all 0.3s ease-in-out",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          fontSize: "24px",
-          padding: "5px",
-        }}
-        style={{
-          position: "fixed",
-          bottom: "20px",
-          right: "20px",
-          zIndex: 1000,
-          marginBottom: "2.813rem",
-          marginRight: "0.625rem",
-        }}
+    <div className="fixed bottom-5 right-5 z-50 flex flex-col items-end space-y-3">
+      {/* Action Button */}
+      <button
+        onClick={startTourEvent}
+        className="w-14 h-14 bg-gray-700 text-white rounded-full shadow-md flex justify-center items-center text-2xl transition-transform duration-200 hover:scale-110"
       >
-        <Action
-          text="Start Tour"
-          onClick={startTourEvent}
-          style={{
-            backgroundColor: "#444444",
-            color: "white",
-            width: "45px",
-            height: "45px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: "50%",
-            fontSize: "22px",
-            transition:
-              "transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out",
-            boxShadow: "0px 4px 8px rgba(0, 0, 0, 0.2)",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.1)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-        >
-          <MdExplore />
-        </Action>
-      </Fab>
-    </>
+        <MdExplore />
+      </button>
+
+      {/* Main FAB Button */}
+      <button
+        onClick={startTourEvent}
+        className="w-16 h-16 bg-darkBlue text-white rounded-full shadow-lg flex justify-center items-center text-3xl transition-all duration-300 hover:scale-110 focus:outline-none"
+      >
+        <FaCircleQuestion />
+      </button>
+    </div>
   );
 };
 
